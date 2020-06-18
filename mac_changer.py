@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import subprocess # call() function for shell commands
+import subprocess # run() function for shell commands
 import argparse   # get values as arguments
 import re         # regural expressions
 
@@ -19,13 +19,13 @@ def get_arguments():
 # function that changes the MAC Address of selected interface
 def change_mac(interface, mac_addr):
     print("[+] Changing MAC Address for " + interface + " to " + mac_addr)
-    subprocess.call(["ifconfig", interface, "down"])
-    subprocess.call(["ifconfig", interface, "hw", "ether", mac_addr])
-    subprocess.call(["ifconfig", interface, "up"])
+    subprocess.run(["ifconfig", interface, "down"])
+    subprocess.run(["ifconfig", interface, "hw", "ether", mac_addr])
+    subprocess.run(["ifconfig", interface, "up"])
 
 # function that returns the MAC Address of selected interface
 def get_curr_mac(interface):
-    ifconfig_result = subprocess.check_output(["ifconfig", interface]).decode("utf-8")
+    ifconfig_result = subprocess.run(["ifconfig", interface], capture_output=True, text=True).stdout
     mac_addr_search_result = re.search(r"(\w\w:){5}\w\w", ifconfig_result)
     if mac_addr_search_result:
         return mac_addr_search_result.group(0)
